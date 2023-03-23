@@ -1,0 +1,3 @@
+fastapi
+natsort
+uvicorn[standard]
