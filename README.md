@@ -145,6 +145,196 @@ Protocol
 
 Anyone are allowed to implement NPPS4 DLAPI protocol without subject to zlib license restrictions.
 
+### Shared Key
+
+To protect from rogue requests, the DLAPI server can be protected using shared key. This is done by
+requiring `DLAPI-Shared-Key` header to match with the server-configured one. If it doesn't match, then
+a 404 will be returned for all API endpoints.
+
+<details>
+<summary><code>GET</code> <code><b>/api/publicinfo</b></code></summary>
+
+Retrieve information about the DLAPI server. A special configuration can be specified to
+always serve this public information without shared key header.
+
+#### Parameters
+
+> None
+
+
+#### Responses
+
+```jsonc
+// HTTP Code 200
+{
+	// Can the API be accessed publicly?
+	// This can still be false even if this endpoint is accessible.
+	"publicApi": true,
+	// NPPS4-DLAPI API compilance version.
+	// Note that there's no "patch" version. Only "major" and "minor" version.
+	"dlapiVersion": {
+		"major": 1,
+		"minor": 0
+	},
+	// How long the download link will last (in seconds)? 0 means last indefinitely.
+	"serveTimeLimit": 0,
+	// What's the latest game version?
+	"gameVersion": "59.4",
+
+	"application": {
+		// Application-specific data goes here.
+	}
+}
+```
+
+</details>
+
+<details>
+<summary><code>POST</code> <code><b>/api/v1/update</b></code></summary>
+
+Get download links for update package to the latest version available.
+
+#### Parameters
+
+> | name      | type     | data type      | description                              |
+> |-----------|----------|----------------|------------------------------------------|
+> | version   | required | string         | Old client version                       |
+> | platform  | required | int            | Platform type. 1 for iOS, 2 for Android. |
+
+#### Responses
+
+```jsonc
+// HTTP Code 200
+[
+	// ... more items
+	// For each item in this array
+	{
+		// Direct link to download.
+		// Link must be publicly accessible even without Shared Key header.
+		"url": "http://localhost/download/update_59.4.zip",
+		// Archive size in bytes.
+		"size": 12345,
+		"checksums": {
+			// For checksums, MD5 and SHA256 is required.
+			// Other checksums for application-specific usage is allowed.
+			"md5": "d41d8cd98f00b204e9800998ecf8427e",
+			"sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+		}
+	}
+	// ... more items
+]
+```
+
+</details>
+
+<details>
+<summary><code>POST</code> <code><b>/api/v1/batch</b></code></summary>
+
+Get all download links of package IDs for specific package type.
+
+#### Parameters
+
+> | name         | type     | data type | description                                        |
+> |--------------|----------|-----------|----------------------------------------------------|
+> | package_type | required | int       | Package type. See below for valid `package_type`s. |
+> | platform     | required | int       | Platform type. 1 for iOS, 2 for Android.           |
+
+#### Possible HTTP Code
+
+* 200 - Request is fulfilled.
+* 404 - Package not found.
+
+#### Responses
+
+```jsonc
+// HTTP Code 200
+[
+	// ... more items
+	// For each item in this array
+	{
+		// Direct link to download.
+		// Link must be publicly accessible even without Shared Key header.
+		"url": "http://localhost/download/0_0_59.4.zip",
+		// The package ID group of this archive.
+		"packageId": 0,
+		// Archive size in bytes.
+		"size": 12345,
+		"checksums": {
+			// For checksums, MD5 and SHA256 is required.
+			// Other checksums for application-specific usage is allowed.
+			"md5": "d41d8cd98f00b204e9800998ecf8427e",
+			"sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+		}
+	}
+	// ... more items
+]
+```
+
+</details>
+
+<details>
+<summary><code>POST</code> <code><b>/api/v1/download</b></code></summary>
+
+Get download links for specific package type and package id.
+
+#### Parameters
+
+> | name         | type     | data type | description                                        |
+> |--------------|----------|-----------|----------------------------------------------------|
+> | package_type | required | int       | Package type. See below for valid `package_type`s. |
+> | package_id   | required | int       | Package ID.   See below for valid `package_id`s.   |
+> | platform     | required | int       | Platform type. 1 for iOS, 2 for Android.           |
+
+#### Possible HTTP Code
+
+* 200 - Request is fulfilled.
+* 404 - Package not found.
+
+#### Responses
+
+```jsonc
+// HTTP Code 200
+[
+	// ... more items
+	// For each item in this array
+	{
+		// Direct link to download.
+		// Link must be publicly accessible even without Shared Key header.
+		"url": "http://localhost/download/0_0_59.4.zip",
+		// Archive size in bytes.
+		"size": 12345,
+		"checksums": {
+			// For checksums, MD5 and SHA256 is required.
+			// Other checksums for application-specific usage is allowed.
+			"md5": "d41d8cd98f00b204e9800998ecf8427e",
+			"sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+		}
+	}
+	// ... more items
+]
+```
+
+</details>
+
+<details>
+<summary><code>POST</code> <code><b>/api/v1/getdb</b></code></summary>
+
+Get decrypted database file.
+
+#### Parameters
+
+> | name | type     | data type | description          |
+> |------|----------|-----------|----------------------|
+> | name | required | string    | Name of the database |
+
+#### Possible HTTP Code
+
+* 302 - Request is fulfilled. Location header refers to the DB file. Requires Shared Key header to download if set.
+* 404 - Database not found.
+
+</details>
+
+
 ### List of valid `<package_type>`s and where to find the `<package_id>`s:
 
 * 0: Always 0.
