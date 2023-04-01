@@ -157,11 +157,6 @@ a 404 will be returned for all API endpoints.
 Retrieve information about the DLAPI server. A special configuration can be specified to
 always serve this public information without shared key header.
 
-#### Parameters
-
-> None
-
-
 #### Responses
 
 ```jsonc
@@ -329,11 +324,55 @@ Get decrypted database file.
 
 #### Possible HTTP Code
 
-* 302 - Request is fulfilled. Location header refers to the DB file. Requires Shared Key header to download if set.
+* 200 - Request is fulfilled. The contents of the whole SQLite3 database is sent. (`Content-Type: application/vnd.sqlite3`)
 * 404 - Database not found.
 
 </details>
 
+<details>
+<summary><code>POST</code> <code><b>/api/v1/getfile</b></code></summary>
+
+Get single file from package type 4.
+
+#### Parameters
+
+> | name  | type     | data type      | description                |
+> |-------|----------|----------------|----------------------------|
+> | files | required | list of string | List of files to retrieve. |
+
+#### Possible HTTP Code
+
+* 200 - Request is fulfilled.
+
+#### Responses
+```jsonc
+// HTTP Code 200
+[
+	// ... more items
+	// For each item in this array
+	{
+		// Direct link to download.
+		// Link must be publicly accessible even without Shared Key header.
+		// If file is not found, then it still must provide valid-but-404 URL!
+		"url": "http://localhost/download/assets/image/tx_foo.texb",
+		// Archive size in bytes.
+		// If the file is not found, the size must be 0.
+		"size": 12345,
+		"checksums": {
+			// For checksums, MD5 and SHA256 is required.
+			// Other checksums for application-specific usage is allowed.
+			// If the file is not found, the hash of null input must be specified.
+			"md5": "d41d8cd98f00b204e9800998ecf8427e",
+			"sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+		}
+	}
+	// ... more items
+]
+```
+
+</details>
+
+**Note**: Application-specific endpoint must go through `/api/app` path!
 
 ### List of valid `<package_type>`s and where to find the `<package_id>`s:
 
