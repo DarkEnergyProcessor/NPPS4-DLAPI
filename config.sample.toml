@@ -1,0 +1,32 @@
+# Sample configuration for n4dlapi reference implementation.
+# ... or well you can just use this instead.
+
+[main]
+# Should the other API be publicly accessible by default?
+public = true
+# What's shared key to access other API if it's not specified as public API?
+# Empty string means no shared key which means all API are publicly accessible.
+# Strings are UTF-8, but URL-encoded when sent through header!
+shared_key = ""
+# Where to find the archive-root folder?
+# Relative to current working directory, so it's recommended to specify absolute
+# path.
+# Environment variable `N4DLAPI_ARCHIVE_ROOT` takes priority than this config.
+archive_root = "archive-root"
+# Where to store extracted files?
+# Environment variable `N4DLAPI_STATIC_DIR` takes priority than this config.
+static_dir = "static"
+
+# It's also possible to change each API visibility status individually.
+# Example: This will make the /api/publicinfo endpoint publicly accessible
+#          even if `public = false` above.
+[api.publicinfo]
+public = true
+
+# Example: Allow access to /api/v1/update endpoint for everyone.
+# [api.v1.update]
+# public = true
+
+# Example: Don't allow public access to /api/v1/getdb endpoint.
+# [api.v1.getdb]
+# public = false

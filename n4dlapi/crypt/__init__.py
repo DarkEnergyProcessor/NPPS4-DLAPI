@@ -24,14 +24,10 @@ else:
     # Process creation is fast.
     DECRYPTER_BACKENDS: list[_SupportsDecryptBackend] = [libhonoka, honkypy]
 
-SELECTED_BACKEND: _SupportsDecryptBackend | None = None
-for backend in DECRYPTER_BACKENDS:
-    if backend.available():
-        SELECTED_BACKEND = backend
-        break
-
-if SELECTED_BACKEND is None:
-    raise Exception("No available decrypter backends available")
+try:
+    SELECTED_BACKEND = list(filter(lambda x: x.available(), DECRYPTER_BACKENDS))[0]
+except IndexError:
+    raise Exception("No available decrypter backends available") from None
 
 
 def decrypt_file(filename: str, dest: str, data: bytes):
