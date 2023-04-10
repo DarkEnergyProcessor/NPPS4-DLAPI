@@ -229,10 +229,11 @@ Get all download links of package IDs for specific package type.
 
 #### Parameters
 
-> | name         | type     | data type | description                                        |
-> |--------------|----------|-----------|----------------------------------------------------|
-> | package_type | required | int       | Package type. See below for valid `package_type`s. |
-> | platform     | required | int       | Platform type. 1 for iOS, 2 for Android.           |
+> | name         | type     | data type | description                                            |
+> |--------------|----------|-----------|--------------------------------------------------------|
+> | package_type | required | int       | Package type. See below for valid `package_type`s.     |
+> | platform     | required | int       | Platform type. 1 for iOS, 2 for Android.               |
+> | exclude      | optional | list[int] | List of package ID to exclude. Defaults to empty list. |
 
 #### Possible HTTP Code
 
@@ -369,6 +370,34 @@ Get single file from package type 4.
 	// ... more items
 ]
 ```
+
+</details>
+
+<details>
+<summary><code>GET</code> <code><b>/api/v1/release_info</b></code></summary>
+
+Get available `release_info` keys.
+
+#### Parameters
+
+> | name | type     | data type | description          |
+> |------|----------|-----------|----------------------|
+> | name | required | string    | Name of the database |
+
+#### Possible HTTP Code
+
+* 200 - Request is fulfilled.
+
+#### Responses
+```jsonc
+// HTTP Code 200
+{
+	// ... keys
+	// The "key" is package_id for package_type 4, the value is gamedb row decryption key, base64-encoded.
+	"423": "UDKkj/dmBRbz+CIB+Ekqyg==",
+	"1874": "T18sDsU+81wLXTjCURNxJw=="
+	// ... keys
+}
 
 </details>
 

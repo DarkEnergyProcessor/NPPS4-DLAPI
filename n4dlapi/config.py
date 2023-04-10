@@ -32,9 +32,13 @@ def init():
         load_toml(toml)
     else:
         load_defaults()
+    # Verify paths
     verify_dir(archive_root)
     os.makedirs(static_dir, exist_ok=True)
     verify_dir(static_dir)
+    # Normalize paths
+    archive_root = os.path.normpath(archive_root)
+    static_dir = os.path.normpath(static_dir)
 
 
 def load_toml(toml: dict[str, Any]):
