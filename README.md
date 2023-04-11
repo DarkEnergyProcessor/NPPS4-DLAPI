@@ -142,6 +142,15 @@ Note: Usually the `microdl_map.json` is 7MB in size.
 }
 ```
 
+Running
+-----
+
+After having your archive-root data, you need a configuration file in TOML text file before running the program.
+`config.sample.toml` can be used for reference.
+
+After you have your config file, run `N4DLAPI_CONFIG_FILE=path/to/config.toml uvicorn n4dlapi:app`. It will listen
+on `127.0.0.1:8000` as per uvicorn defaults.
+
 Protocol
 -----
 
