@@ -10,11 +10,14 @@ def available():
     return LIBHONOKA_EXECUTABLE is not None
 
 
-def decrypt_file(basename: str, dest: str, data: bytes):
+def decrypt(basename: str, data: bytes):
     global LIBHONOKA_EXECUTABLE
     if LIBHONOKA_EXECUTABLE is None:
         raise RuntimeError("libhonoka is not available")
-    process = subprocess.Popen([LIBHONOKA_EXECUTABLE, "-b", basename, "-", dest], stdin=subprocess.PIPE)
-    process.communicate(data)
+    process = subprocess.Popen(
+        [LIBHONOKA_EXECUTABLE, "-b", basename, "-", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE
+    )
+    result = process.communicate(data)[0]
     if process.wait() != 0:
         raise ValueError("libhonoka failed to decrypt")
+    return result

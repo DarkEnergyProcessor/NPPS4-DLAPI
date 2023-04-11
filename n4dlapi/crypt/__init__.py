@@ -13,22 +13,19 @@ class _SupportsDecryptBackend(Protocol):
         return False
 
     @staticmethod
-    def decrypt_file(basename: str, dest: str, data: bytes):
-        pass
+    def decrypt(basename: str, data: bytes) -> bytes:
+        return b""
 
 
-if sys.platform in ("win32", "msys", "cygwin"):
-    # Windows process creation is slow. Prioritize HonkyPy
-    DECRYPTER_BACKENDS: list[_SupportsDecryptBackend] = [honkypy, libhonoka]
-else:
-    # Process creation is fast.
-    DECRYPTER_BACKENDS: list[_SupportsDecryptBackend] = [libhonoka, honkypy]
+DECRYPTER_BACKENDS: list[_SupportsDecryptBackend] = [libhonoka, honkypy]
 
 try:
     SELECTED_BACKEND = list(filter(lambda x: x.available(), DECRYPTER_BACKENDS))[0]
 except IndexError:
     raise Exception("No available decrypter backends available") from None
 
+print("Decrypter backend:", SELECTED_BACKEND)
 
-def decrypt_file(filename: str, dest: str, data: bytes):
-    SELECTED_BACKEND.decrypt_file(os.path.basename(filename), dest, data)
+
+def decrypt(filename: str, data: bytes):
+    return SELECTED_BACKEND.decrypt(os.path.basename(filename), data)
