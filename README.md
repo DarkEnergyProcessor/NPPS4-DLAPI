@@ -154,7 +154,7 @@ on `127.0.0.1:8000` as per uvicorn defaults.
 Protocol
 -----
 
-Anyone are allowed to implement NPPS4 DLAPI protocol without subject to zlib license restrictions.
+Anyone are allowed to implement NPPS4 DLAPI protocol without subject to zlib license restrictions. The zlib license restriction only applies **specifically to this reference implementation!**
 
 ### Shared Key
 
@@ -410,6 +410,7 @@ Get available `release_info` keys.
 	"1874": "T18sDsU+81wLXTjCURNxJw=="
 	// ... keys
 }
+```
 
 </details>
 
