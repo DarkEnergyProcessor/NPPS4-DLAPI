@@ -97,29 +97,63 @@ def get_update_file(old_client_version: str, platform: int):
         if entry.is_dir():
             try:
                 ver = parse_sifversion(entry.name)
-                update_list.append(ver)
+                if ver > current_version:
+                    update_list.append(ver)
             except ValueError:
                 pass
     update_list.sort()
 
-    # Find version
-    try:
-        index = update_list.index(parse_sifversion(old_client_version))
-        download_data: list[model.DownloadInfoModel] = []
-        for ver in update_list[index + 1 :]:
-            files: list[tuple[str, int]] = natsort.natsorted(
-                read_json(path + ("/%s.%s" % ver) + "/info.json").items(), key=lambda x: x[0]
-            )
-            for file, size in files:
-                fullpath = path + ("/%s.%s/" % ver) + file
-                download_data.append(
-                    model.DownloadInfoModel(
-                        url=fullpath[archive_root_len:],
-                        size=size,
-                        checksums=model.ChecksumModel(md5=hash_md5_file(fullpath), sha256=hash_sha256_file(fullpath)),
-                    )
+    # Get download files
+    download_data: list[model.DownloadInfoModel] = []
+    for ver in update_list:
+        files: list[tuple[str, int]] = natsort.natsorted(
+            read_json(path + ("/%s.%s" % ver) + "/info.json").items(), key=lambda x: x[0]
+        )
+        for file, size in files:
+            fullpath = path + ("/%s.%s/" % ver) + file
+            download_data.append(
+                model.DownloadInfoModel(
+                    url=fullpath[archive_root_len:],
+                    size=size,
+                    checksums=model.ChecksumModel(md5=hash_md5_file(fullpath), sha256=hash_sha256_file(fullpath)),
                 )
-        return download_data
-    except ValueError:
-        # Invalid version
-        return []
+            )
+    return download_data
+
+
+def get_batch_list(package_type: int, platform: int, exclude: list[int]):
+    latest = get_latest_version()
+    path = (
+        config.get_archive_root_dir()
+        + "/"
+        + _PLATFORM_MAPPING[platform - 1]
+        + "/package/"
+        + ("%s.%s/" % latest)
+        + str(package_type)
+    )
+    archive_root_len = len(config.get_archive_root_dir())
+
+    if not os.path.isdir(path):
+        # Not found
+        print(path)
+        return None
+
+    result: list[model.BatchDownloadInfoModel] = []
+    packages: list[int] = read_json(path + "/info.json")
+
+    for package_id in sorted(set(packages).difference(exclude)):
+        files: list[tuple[str, int]] = natsort.natsorted(
+            read_json(f"{path}/{package_id}/info.json").items(), key=lambda x: x[0]
+        )
+        for file, size in files:
+            fullpath = f"{path}/{package_id}/{file}"
+            result.append(
+                model.BatchDownloadInfoModel(
+                    url=fullpath[archive_root_len:],
+                    size=size,
+                    checksums=model.ChecksumModel(md5=hash_md5_file(fullpath), sha256=hash_sha256_file(fullpath)),
+                    packageId=package_id,
+                )
+            )
+
+    return result

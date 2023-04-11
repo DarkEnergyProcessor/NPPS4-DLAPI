@@ -60,13 +60,48 @@ class DownloadInfoModel(pydantic.BaseModel):
     size: int
     checksums: ChecksumModel
 
+    class Config:
+        schema_extra = {
+            "example": {
+                "url": "http://localhost/download/0_0_59.4.zip",
+                "size": 12345,
+                "checksums": {
+                    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+                    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                },
+            }
+        }
+
+
+class BatchDownloadInfoModel(DownloadInfoModel):
+    packageId: int
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "url": "http://localhost/download/4_1874_59.4.zip",
+                "size": 12345,
+                "packageId": 1874,
+                "checksums": {
+                    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+                    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                },
+            }
+        }
+
 
 class UpdateRequestModel(pydantic.BaseModel):
     version: str
     platform: PlatformType
+
+    class Config:
+        schema_extra = {"example": {"version": "59.0", "platform": 2}}
 
 
 class BatchDownloadRequestModel(pydantic.BaseModel):
     package_type: PackageType
     platform: PlatformType
     exclude: list[int] = []
+
+    class Config:
+        schema_extra = {"example": {"package_type": 4, "platform": 1, "exclude": [1874]}}

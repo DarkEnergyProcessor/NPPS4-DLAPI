@@ -49,6 +49,19 @@ async def update_api(request: fastapi.Request, param: model.UpdateRequestModel) 
     return downloads
 
 
+@app.post("/api/v1/batch", dependencies=[fastapi.Depends(verify_api_access)])
+async def batch_api(request: fastapi.Request, param: model.BatchDownloadRequestModel):
+    """
+    Get all download links of package IDs for specific package type.
+    """
+    downloads = file.get_batch_list(int(param.package_type), param.platform, param.exclude)
+    if downloads is None:
+        raise fastapi.HTTPException(404, "Package type not found")
+    for download in downloads:
+        download.url = str(request.url_for("archive-root", path=download.url))
+    return downloads
+
+
 @app.get("/api/v1/release_info", dependencies=[fastapi.Depends(verify_api_access)])
 async def release_info_api() -> dict[str, str]:
     """
