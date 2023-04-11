@@ -66,8 +66,8 @@ def load_toml(toml: dict[str, Any]):
     shared_key = str(toml["main"]["shared_key"])
     if len(shared_key) == 0:
         shared_key = None
-    archive_root = os.getenv("N4DLAPI_ARCHIVE_ROOT", str(toml.get("archive_root", "archive-root")))
-    static_dir = os.getenv("N4DLAPI_STATIC_DIR", str(toml.get("static_dir", "static")))
+    archive_root = os.getenv("N4DLAPI_ARCHIVE_ROOT", str(toml["main"].get("archive_root", "archive-root")))
+    static_dir = os.getenv("N4DLAPI_STATIC_DIR", str(toml["main"].get("static_dir", "static")))
     api_publicness = toml.get("api", {})
 
 
