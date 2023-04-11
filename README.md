@@ -72,6 +72,8 @@ Before running, ensure to have all SIF game files with these structure.
 }
 ```
 
+Protip: Complete keys gathered by the community are bundled as `release_info.json` in this repository.
+
 ### Example `<OS>/update/info.json`
 
 ```json
@@ -229,11 +231,11 @@ Get all download links of package IDs for specific package type.
 
 #### Parameters
 
-> | name         | type     | data type | description                                            |
-> |--------------|----------|-----------|--------------------------------------------------------|
-> | package_type | required | int       | Package type. See below for valid `package_type`s.     |
-> | platform     | required | int       | Platform type. 1 for iOS, 2 for Android.               |
-> | exclude      | optional | list[int] | List of package ID to exclude. Defaults to empty list. |
+> | name         | type     | data type   | description                                            |
+> |--------------|----------|-------------|--------------------------------------------------------|
+> | package_type | required | int         | Package type. See below for valid `package_type`s.     |
+> | platform     | required | int         | Platform type. 1 for iOS, 2 for Android.               |
+> | exclude      | optional | list of int | List of package ID to exclude. Defaults to empty list. |
 
 #### Possible HTTP Code
 
@@ -278,7 +280,7 @@ Get download links for specific package type and package id.
 > | name         | type     | data type | description                                        |
 > |--------------|----------|-----------|----------------------------------------------------|
 > | package_type | required | int       | Package type. See below for valid `package_type`s. |
-> | package_id   | required | int       | Package ID.   See below for valid `package_id`s.   |
+> | package_id   | required | int       | Package ID. See below for possible `package_id`s.  |
 > | platform     | required | int       | Platform type. 1 for iOS, 2 for Android.           |
 
 #### Possible HTTP Code
@@ -313,7 +315,7 @@ Get download links for specific package type and package id.
 </details>
 
 <details>
-<summary><code>POST</code> <code><b>/api/v1/getdb</b></code></summary>
+<summary><code>GET</code> <code><b>/api/v1/getdb/{name}</b></code></summary>
 
 Get decrypted database file.
 
@@ -337,9 +339,10 @@ Get single file from package type 4.
 
 #### Parameters
 
-> | name  | type     | data type      | description                |
-> |-------|----------|----------------|----------------------------|
-> | files | required | list of string | List of files to retrieve. |
+> | name     | type     | data type      | description                              |
+> |----------|----------|----------------|------------------------------------------|
+> | files    | required | list of string | List of files to retrieve.               |
+> | platform | required | int            | Platform type. 1 for iOS, 2 for Android. |
 
 #### Possible HTTP Code
 

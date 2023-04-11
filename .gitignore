@@ -3,3 +3,4 @@ archive-root
 static
 venv
 *.pyc
+config.toml

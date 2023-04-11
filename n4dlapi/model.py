@@ -1,10 +1,24 @@
+# Copyright (c) 2023 Dark Energy Processor
+#
+# This software is provided 'as-is', without any express or implied
+# warranty. In no event will the authors be held liable for any damages
+# arising from the use of this software.
+#
+# Permission is granted to anyone to use this software for any purpose,
+# including commercial applications, and to alter it and redistribute it
+# freely, subject to the following restrictions:
+#
+# 1. The origin of this software must not be misrepresented; you must not
+#    claim that you wrote the original software. If you use this software
+#    in a product, an acknowledgment in the product documentation would be
+#    appreciated but is not required.
+# 2. Altered source versions must be plainly marked as such, and must not be
+#    misrepresented as being the original software.
+# 3. This notice may not be removed or altered from any source distribution.
+
 import enum
 
 import pydantic
-
-from . import config
-
-from typing import Literal
 
 
 class PlatformType(enum.IntEnum):
@@ -105,3 +119,21 @@ class BatchDownloadRequestModel(pydantic.BaseModel):
 
     class Config:
         schema_extra = {"example": {"package_type": 4, "platform": 1, "exclude": [1874]}}
+
+
+class DownlodaRequestModel(pydantic.BaseModel):
+    package_type: PackageType
+    package_id: int
+    platform: PlatformType
+
+    class Config:
+        schema_extra = {"example": {"package_type": 0, "package_id": 0, "platform": 1}}
+
+
+class MicroDownloadRequestModel(pydantic.BaseModel):
+    files: list[str]
+    platform: PlatformType
+
+
+class ErrorResponseModel(pydantic.BaseModel):
+    detail: str
