@@ -1,6 +1,9 @@
 NPPS4-DLAPI
 =====
 
+[![NPPS4 DLAPI Spec.: Version 1.0](https://img.shields.io/badge/NPPS4%20DLAPI%20Spec.-Version%201.0-bf88ba)](https://github.com/DarkEnergyProcessor/NPPS4-DLAPI)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 This is reference implementation and documentation of NPPS4 Download API protocol.
 
 Setup
@@ -140,6 +143,16 @@ Note: Usually the `microdl_map.json` is 7MB in size.
 	"1.zip": 2131514,
 	"2.zip": 198
 }
+```
+
+For obvious reasons we can't provide download link to those files.
+
+Once you have those files, create new virtual environment and install the necessary dependencies.
+
+```
+python -m venv venv
+(activate venv)
+pip install --upgrade pip -r requirements.txt
 ```
 
 Running
