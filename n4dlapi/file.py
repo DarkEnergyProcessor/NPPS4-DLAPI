@@ -55,29 +55,13 @@ class MemoizeByModTime(Generic[_T]):
 
 
 @MemoizeByModTime
-def hash_md5_file(file: str) -> str:
+def hash_file(file: str) -> tuple[str, str]:
     with open(file, "rb") as f:
-        md5 = hashlib.md5(usedforsecurity=False)
-        while True:
-            result = f.read(4096)
-            if len(result) > 0:
-                md5.update(result)
-            if len(result) < 4096:
-                break
-        return md5.hexdigest()
-
-
-@MemoizeByModTime
-def hash_sha256_file(file: str) -> str:
-    with open(file, "rb") as f:
-        sha256 = hashlib.sha256(usedforsecurity=False)
-        while True:
-            result = f.read(4096)
-            if len(result) > 0:
-                sha256.update(result)
-            if len(result) < 4096:
-                break
-        return sha256.hexdigest()
+        contents = f.read()
+    return (
+        hashlib.md5(contents, usedforsecurity=False).hexdigest(),
+        hashlib.sha256(contents, usedforsecurity=False).hexdigest(),
+    )
 
 
 @MemoizeByModTime
@@ -135,11 +119,12 @@ def get_update_file(old_client_version: str, platform: int):
         )
         for file, size in files:
             fullpath = path + ("/%s.%s/" % ver) + file
+            md5, sha256 = hash_file(fullpath)
             download_data.append(
                 model.DownloadInfoModel(
                     url=fullpath[archive_root_len:],
                     size=size,
-                    checksums=model.ChecksumModel(md5=hash_md5_file(fullpath), sha256=hash_sha256_file(fullpath)),
+                    checksums=model.ChecksumModel(md5=md5, sha256=sha256),
                 )
             )
     return download_data
@@ -170,11 +155,12 @@ def get_batch_list(package_type: int, platform: int, exclude: list[int]):
         )
         for file, size in files:
             fullpath = f"{path}/{package_id}/{file}"
+            md5, sha256 = hash_file(fullpath)
             result.append(
                 model.BatchDownloadInfoModel(
                     url=fullpath[archive_root_len:],
                     size=size,
-                    checksums=model.ChecksumModel(md5=hash_md5_file(fullpath), sha256=hash_sha256_file(fullpath)),
+                    checksums=model.ChecksumModel(md5=md5, sha256=sha256),
                     packageId=package_id,
                 )
             )
@@ -201,11 +187,12 @@ def get_single_package(package_type: int, package_id: int, platform: int):
     files: list[tuple[str, int]] = natsort.natsorted(read_json(path + "/info.json").items(), key=lambda x: x[0])
     for file, size in files:
         fullpath = f"{path}/{file}"
+        md5, sha256 = hash_file(fullpath)
         result.append(
             model.DownloadInfoModel(
                 url=fullpath[archive_root_len:],
                 size=size,
-                checksums=model.ChecksumModel(md5=hash_md5_file(fullpath), sha256=hash_sha256_file(fullpath)),
+                checksums=model.ChecksumModel(md5=md5, sha256=sha256),
             )
         )
 
@@ -226,7 +213,7 @@ def get_dbs_in_archive(file: str):
 @MemoizeByModTime
 def get_file_info(file: str):
     stat = os.stat(file)
-    return stat.st_size, hash_md5_file(file), hash_sha256_file(file)
+    return stat.st_size, *hash_file(file)
 
 
 def get_database_file(name: str):
