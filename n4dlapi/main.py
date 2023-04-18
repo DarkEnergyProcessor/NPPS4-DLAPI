@@ -144,3 +144,11 @@ async def release_info_api() -> dict[str, str]:
     Get available `release_info` keys.
     """
     return file.get_release_info()
+
+
+# Preload hashes
+if config.preload_hashes():
+    for platform in {"iOS": 1, "Android": 2}.items():
+        for package in range(7):
+            print("Preloading", package, platform[0])
+            file.get_batch_list(package, platform[1], [])

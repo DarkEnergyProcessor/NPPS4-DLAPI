@@ -30,6 +30,7 @@ main_public = True
 shared_key = None
 archive_root = "archive-root"
 static_dir = "static"
+preload = False
 api_publicness: dict[str, Any] = {}
 
 EMPTY: dict[str, Any] = {}
@@ -60,7 +61,7 @@ def init():
 
 
 def load_toml(toml: dict[str, Any]):
-    global main_public, shared_key, archive_root, static_dir, api_publicness
+    global main_public, shared_key, archive_root, static_dir, preload, api_publicness
 
     main_public = bool(toml["main"]["public"])
     shared_key = str(toml["main"]["shared_key"])
@@ -68,16 +69,18 @@ def load_toml(toml: dict[str, Any]):
         shared_key = None
     archive_root = os.getenv("N4DLAPI_ARCHIVE_ROOT", str(toml["main"].get("archive_root", "archive-root")))
     static_dir = os.getenv("N4DLAPI_STATIC_DIR", str(toml["main"].get("static_dir", "static")))
+    preload = os.getenv("N4DLAPI_PRELOAD_HASH", str(toml["main"].get("preload_hash", "0"))) == "1"
     api_publicness = toml.get("api", {})
 
 
 def load_defaults():
-    global main_public, shared_key, archive_root, static_dir, api_publicness
+    global main_public, shared_key, archive_root, static_dir, preload, api_publicness
 
     main_public = True
     shared_key = None
     archive_root = os.getenv("N4DLAPI_ARCHIVE_ROOT", "archive-root")
     static_dir = os.getenv("N4DLAPI_STATIC_DIR", "static")
+    preload = os.getenv("N4DLAPI_PRELOAD_HASH", "0") == "1"
     api_publicness = {}
 
 
@@ -119,4 +122,9 @@ def get_static_dir():
     return static_dir
 
 
-__all__ = ["init", "is_accessible", "is_public_accessible", "get_archive_root_dir", "get_static_dir"]
+def preload_hashes():
+    global preload
+    return preload
+
+
+__all__ = ["init", "is_accessible", "is_public_accessible", "get_archive_root_dir", "get_static_dir", "preload_hashes"]
