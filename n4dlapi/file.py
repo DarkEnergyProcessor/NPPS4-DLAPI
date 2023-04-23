@@ -158,7 +158,7 @@ def get_single_package(pkgtype: int, pkgid: int, platform: int):
         result.append(
             model.DownloadInfoModel(
                 url=fullpath[archive_root_len:],
-                size=filedata["Size"],
+                size=filedata["size"],
                 checksums=model.ChecksumModel(md5=filedata["md5"], sha256=filedata["sha256"]),
             )
         )
@@ -180,12 +180,13 @@ def get_database_file(name: str):
 def get_microdl_file(file: str, platform: int):
     latest = get_latest_version()
     # Normalize path
-    basepath = f"{config.get_archive_root_dir()}/{_PLATFORM_MAP[platform - 1]}/package/{version_string(latest)}/microdl"
+    commonpath = f"{_PLATFORM_MAP[platform - 1]}/package/{version_string(latest)}/microdl"
+    basepath = f"{config.get_archive_root_dir()}/{commonpath}"
     microdl_map: dict[str, dict[str, Any]] = read_json(basepath + "/info.json")
     sanitized_file = os.path.normpath(file.replace("..", "")).replace("\\", "/")
     if sanitized_file[0] == "/":
         sanitized_file = sanitized_file[1:]
-    path = f"{basepath}/{sanitized_file}"
+    path = f"{commonpath}/{sanitized_file}"
 
     # Get microdl_map
     result = model.DownloadInfoModel(

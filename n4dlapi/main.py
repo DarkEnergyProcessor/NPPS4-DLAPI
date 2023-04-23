@@ -133,7 +133,7 @@ async def getfile_api(request: fastapi.Request, param: model.MicroDownloadReques
     """
     downloads = [file.get_microdl_file(p, int(param.platform)) for p in param.files]
     for download in downloads:
-        download.url = str(request.url_for("static", path=download.url))
+        download.url = str(request.url_for("archive-root", path=download.url))
     return downloads
 
 
