@@ -23,14 +23,13 @@ from . import config
 from . import file
 from . import model
 
-N4DLAPI_MAJOR_VERSION = 2
+N4DLAPI_MAJOR_VERSION = 1
 N4DLAPI_MINOR_VERSION = 0
 
 config.init()
 
 app = fastapi.FastAPI()
 app.mount("/archive-root", fastapi.staticfiles.StaticFiles(directory=config.get_archive_root_dir()), "archive-root")
-app.mount("/static", fastapi.staticfiles.StaticFiles(directory=config.get_static_dir()), "static")
 
 
 def verify_api_access(request: fastapi.Request):
