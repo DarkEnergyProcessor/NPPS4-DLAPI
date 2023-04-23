@@ -122,10 +122,7 @@ async def getdb_api(name: str):
 
 
 @app.post(
-    "/api/v1/getfile",
-    dependencies=[fastapi.Depends(verify_api_access)],
-    response_model=list[model.DownloadInfoModel],
-    responses={404: {"model": model.ErrorResponseModel}},
+    "/api/v1/getfile", dependencies=[fastapi.Depends(verify_api_access)], response_model=list[model.DownloadInfoModel]
 )
 async def getfile_api(request: fastapi.Request, param: model.MicroDownloadRequestModel):
     """
