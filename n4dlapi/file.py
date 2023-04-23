@@ -76,13 +76,10 @@ def get_versions(file: str):
 
 
 def get_latest_version():
-    update_ios: list[str] = natsort.natsorted(read_json(config.get_archive_root_dir() + "/iOS/package/info.json"))
     update_android: list[str] = natsort.natsorted(
         read_json(config.get_archive_root_dir() + "/Android/package/info.json")
     )
-    if update_ios[-1] != update_android[-1]:
-        raise RuntimeError(f"Latest version discrepancy detected (iOS {update_ios}, Android {update_android})")
-    return parse_sifversion(update_ios[-1])
+    return parse_sifversion(update_android[-1])
 
 
 def get_release_info():
