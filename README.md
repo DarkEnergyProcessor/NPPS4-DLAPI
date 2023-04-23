@@ -12,36 +12,41 @@ Setup
 Before running, ensure to have all SIF game files with these structure.
 
 ```
-<project root>
-├── archive-root/
-│   ├── {iOS,Android}/
-│   │   ├── update/
-│   │   │   ├── <client_version>/
-│   │   │   │   ├── external/
-│   │   │   │   │   ├── assets/
-│   │   │   │   │   ├── db/
-│   │   │   │   │   └── en/
-│   │   │   │   ├── 1.zip
-│   │   │   │   ├── 2.zip
-│   │   │   │   ├── ...
-│   │   │   │   └── info.json
-│   │   │   └── info.json
-│   │   └── package/
-│   │       ├── <client_version>/
-│   │       │   ├── <package_type>/
-│   │       │   │   ├── <package_id>/
-│   │       │   │   │   ├── 1.zip
-│   │       │   │   │   ├── 2.zip
-│   │       │   │   │   ├── ...
-│   │       │   │   │   └── info.json
-│   │       │   │   └── info.json
-│   │       │   └── microdl_map.json
-│   │       └── info.json
-│   └── release_info.json
-└── n4dlapi/
-    ├── main.py
-    └── ...
+archive-root/
+├── {iOS,Android}/
+│   ├── update/
+│   │   ├── <client_version>/
+│   │   │   ├── 1.zip
+│   │   │   ├── 2.zip
+│   │   │   ├── ...
+│   │   │   ├── info.json
+│   │   │   └── infov2.json (*)
+│   │   ├── info.json
+│   │   └── infov2.json (*)
+│   └── package/
+│       ├── <client_version>/
+│       │   ├── <package_type>/
+│       │   │   ├── <package_id>/
+│       │   │   │   ├── 1.zip
+│       │   │   │   ├── 2.zip
+│       │   │   │   ├── ...
+│       │   │   │   ├── info.json
+│       │   │   │   └── infov2.json (*)
+│       │   │   └── info.json
+│       │   ├── db (*)
+│       │   │   └── *.db_
+│       │   ├── microdl/ (*)
+│       │   │   ├── assets/
+│       │   │   ├── config/
+│       │   │   ├── en/
+│       │   │   └── info.json
+│       │   └── microdl_map.json
+│       └── info.json
+├── release_info.json
+└── generation.json (*)
 ```
+
+**\***: run `update_v1.1.py` script to upgrade the directory structure!
 
 ### Explanation, all paths are relative to `archive-root`:
 
