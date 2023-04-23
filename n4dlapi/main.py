@@ -23,7 +23,7 @@ from . import config
 from . import file
 from . import model
 
-N4DLAPI_MAJOR_VERSION = 1
+N4DLAPI_MAJOR_VERSION = 2
 N4DLAPI_MINOR_VERSION = 0
 
 config.init()

@@ -16,6 +16,7 @@
 #    misrepresented as being the original software.
 # 3. This notice may not be removed or altered from any source distribution.
 
+import json
 import os
 
 # tomli is bundled in Python 3.11 as tomllib
@@ -33,6 +34,7 @@ static_dir = "static"
 api_publicness: dict[str, Any] = {}
 
 EMPTY: dict[str, Any] = {}
+REQUIRE_GENERATION = (1, 1)
 
 
 def verify_dir(dir: str):
@@ -57,6 +59,19 @@ def init():
     # Normalize paths
     archive_root = os.path.normpath(archive_root)
     static_dir = os.path.normpath(static_dir)
+    # Verify archive-root generation
+    try:
+        with open(f"{archive_root}/generation.json", "r", encoding="UTF-8", newline="") as f:
+            argen_data = json.load(f)
+            argen: tuple[int, int] = (argen_data["major"], argen_data["minor"])
+    except Exception:
+        argen = (1, 0)
+    if argen < REQUIRE_GENERATION:
+        raise RuntimeError(
+            '"archive-root" generation is too old (' + ("%d.%d" % argen) + "). Forgot to run update script?"
+        )
+    elif argen[0] > REQUIRE_GENERATION[0]:
+        raise RuntimeError('"archive-root" generation is too new (' + ("%d.%d" % argen) + ").")
 
 
 def load_toml(toml: dict[str, Any]):
