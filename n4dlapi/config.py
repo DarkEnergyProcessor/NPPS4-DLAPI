@@ -30,7 +30,6 @@ from typing import Any
 main_public = True
 shared_key = None
 archive_root = "archive-root"
-static_dir = "static"
 api_publicness: dict[str, Any] = {}
 
 EMPTY: dict[str, Any] = {}
@@ -43,7 +42,7 @@ def verify_dir(dir: str):
 
 
 def init():
-    global archive_root, static_dir
+    global archive_root
 
     config_file = os.getenv("N4DLAPI_CONFIG_FILE", "config.toml")
     if os.path.isfile(config_file):
@@ -52,13 +51,9 @@ def init():
         load_toml(toml)
     else:
         load_defaults()
-    # Verify paths
+    # Verify and normalize paths
     verify_dir(archive_root)
-    os.makedirs(static_dir, exist_ok=True)
-    verify_dir(static_dir)
-    # Normalize paths
     archive_root = os.path.normpath(archive_root)
-    static_dir = os.path.normpath(static_dir)
     # Verify archive-root generation
     try:
         with open(f"{archive_root}/generation.json", "r", encoding="UTF-8", newline="") as f:
@@ -75,24 +70,22 @@ def init():
 
 
 def load_toml(toml: dict[str, Any]):
-    global main_public, shared_key, archive_root, static_dir, api_publicness
+    global main_public, shared_key, archive_root, api_publicness
 
     main_public = bool(toml["main"]["public"])
     shared_key = str(toml["main"]["shared_key"])
     if len(shared_key) == 0:
         shared_key = None
     archive_root = os.getenv("N4DLAPI_ARCHIVE_ROOT", str(toml["main"].get("archive_root", "archive-root")))
-    static_dir = os.getenv("N4DLAPI_STATIC_DIR", str(toml["main"].get("static_dir", "static")))
     api_publicness = toml.get("api", {})
 
 
 def load_defaults():
-    global main_public, shared_key, archive_root, static_dir, api_publicness
+    global main_public, shared_key, archive_root, api_publicness
 
     main_public = True
     shared_key = None
     archive_root = os.getenv("N4DLAPI_ARCHIVE_ROOT", "archive-root")
-    static_dir = os.getenv("N4DLAPI_STATIC_DIR", "static")
     api_publicness = {}
 
 
@@ -129,9 +122,4 @@ def get_archive_root_dir():
     return archive_root
 
 
-def get_static_dir():
-    global static_dir
-    return static_dir
-
-
-__all__ = ["init", "is_accessible", "is_public_accessible", "get_archive_root_dir", "get_static_dir"]
+__all__ = ["init", "is_accessible", "is_public_accessible", "get_archive_root_dir"]

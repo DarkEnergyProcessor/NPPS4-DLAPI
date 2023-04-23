@@ -13,9 +13,6 @@ shared_key = ""
 # path.
 # Environment variable `N4DLAPI_ARCHIVE_ROOT` takes priority than this config.
 archive_root = "archive-root"
-# Where to store extracted files?
-# Environment variable `N4DLAPI_STATIC_DIR` takes priority than this config.
-static_dir = "static"
 
 # It's also possible to change each API visibility status individually.
 # Example: This will make the /api/publicinfo endpoint publicly accessible
