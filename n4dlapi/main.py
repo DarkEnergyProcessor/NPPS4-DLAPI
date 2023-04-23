@@ -39,7 +39,7 @@ def verify_api_access(request: fastapi.Request):
 
 
 @app.get("/api/publicinfo", dependencies=[fastapi.Depends(verify_api_access)])
-async def public_info_api() -> model.PublicInfoModel:
+def public_info_api() -> model.PublicInfoModel:
     """
     Retrieve information about the DLAPI server.
     """
@@ -54,7 +54,7 @@ async def public_info_api() -> model.PublicInfoModel:
 
 
 @app.post("/api/v1/update", dependencies=[fastapi.Depends(verify_api_access)])
-async def update_api(request: fastapi.Request, param: model.UpdateRequestModel) -> list[model.DownloadInfoModel]:
+def update_api(request: fastapi.Request, param: model.UpdateRequestModel) -> list[model.DownloadInfoModel]:
     """
     Get download links for update package to the latest version available.
     """
@@ -70,7 +70,7 @@ async def update_api(request: fastapi.Request, param: model.UpdateRequestModel) 
     response_model=list[model.BatchDownloadInfoModel],
     responses={404: {"model": model.ErrorResponseModel}},
 )
-async def batch_api(request: fastapi.Request, param: model.BatchDownloadRequestModel):
+def batch_api(request: fastapi.Request, param: model.BatchDownloadRequestModel):
     """
     Get all download links of package IDs for specific package type.
     """
@@ -89,7 +89,7 @@ async def batch_api(request: fastapi.Request, param: model.BatchDownloadRequestM
     response_model=list[model.DownloadInfoModel],
     responses={404: {"model": model.ErrorResponseModel}},
 )
-async def download_api(request: fastapi.Request, param: model.DownlodaRequestModel):
+def download_api(request: fastapi.Request, param: model.DownlodaRequestModel):
     """
     Get download links for specific package type and package id.
     """
@@ -108,7 +108,7 @@ async def download_api(request: fastapi.Request, param: model.DownlodaRequestMod
     response_class=fastapi.responses.Response,
     responses={200: {"content": {"application/vnd.sqlite3": {}}}, 404: {"model": model.ErrorResponseModel}},
 )
-async def getdb_api(name: str):
+def getdb_api(name: str):
     """
     Get decrypted database file.
     """
@@ -124,7 +124,7 @@ async def getdb_api(name: str):
 @app.post(
     "/api/v1/getfile", dependencies=[fastapi.Depends(verify_api_access)], response_model=list[model.DownloadInfoModel]
 )
-async def getfile_api(request: fastapi.Request, param: model.MicroDownloadRequestModel):
+def getfile_api(request: fastapi.Request, param: model.MicroDownloadRequestModel):
     """
     Get single file from package type 4 a.k.a. micro download.
     """
@@ -135,7 +135,7 @@ async def getfile_api(request: fastapi.Request, param: model.MicroDownloadReques
 
 
 @app.get("/api/v1/release_info", dependencies=[fastapi.Depends(verify_api_access)])
-async def release_info_api() -> dict[str, str]:
+def release_info_api() -> dict[str, str]:
     """
     Get available `release_info` keys.
     """
