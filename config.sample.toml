@@ -16,9 +16,6 @@ archive_root = "archive-root"
 # Where to store extracted files?
 # Environment variable `N4DLAPI_STATIC_DIR` takes priority than this config.
 static_dir = "static"
-# Preload hashes?
-# Environment variable `N4DLAPI_PRELOAD_HASH` takes priority than this config.
-preload_hash = false
 
 # It's also possible to change each API visibility status individually.
 # Example: This will make the /api/publicinfo endpoint publicly accessible
