@@ -87,6 +87,8 @@ def get_latest_version():
             if os.path.isfile(os.path.join(root_dir, v, "package/info.json")):
                 _update_preference = i
                 break
+
+    if _update_preference == -1:
         raise RuntimeError("No package found!")
 
     update_info: list[str] = natsort.natsorted(
@@ -100,7 +102,7 @@ def get_release_info():
     return release_info
 
 
-def get_update_file(old_client_version: str, platform: int):
+def get_update_file(old_client_version: str, platform: int) -> list[model.DownloadUpdateModel]:
     path = f"{config.get_archive_root_dir()}/{_PLATFORM_MAP[platform - 1]}/update"
     archive_root_len = len(config.get_archive_root_dir())
     current_version = parse_sifversion(old_client_version)
@@ -110,19 +112,22 @@ def get_update_file(old_client_version: str, platform: int):
         return []
 
     # Get download files
-    download_data: list[model.DownloadInfoModel] = []
+    download_data: list[model.DownloadUpdateModel] = []
     for ver in filter(lambda x: x > current_version, updates):
-        update_ver_path = f"{path}/{version_string(ver)}"
+        verstr = version_string(ver)
+        update_ver_path = f"{path}/{verstr}"
         file_datas: list[dict[str, Any]] = read_json(update_ver_path + "/infov2.json")
         for filedata in file_datas:
             fullpath = f"{update_ver_path}/{filedata['name']}"
             download_data.append(
-                model.DownloadInfoModel(
+                model.DownloadUpdateModel(
                     url=fullpath[archive_root_len:],
                     size=filedata["size"],
                     checksums=model.ChecksumModel(md5=filedata["md5"], sha256=filedata["sha256"]),
+                    version=verstr,
                 )
             )
+
     return download_data
 
 

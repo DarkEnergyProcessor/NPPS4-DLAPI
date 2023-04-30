@@ -87,6 +87,23 @@ class DownloadInfoModel(pydantic.BaseModel):
         }
 
 
+class DownloadUpdateModel(DownloadInfoModel):
+    version: str
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "url": "http://localhost/download/0_0_59.4.zip",
+                "size": 12345,
+                "checksums": {
+                    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+                    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                },
+                "version": "59.4",
+            }
+        }
+
+
 class BatchDownloadInfoModel(DownloadInfoModel):
     packageId: int
 

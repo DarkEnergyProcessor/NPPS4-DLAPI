@@ -24,7 +24,7 @@ from . import file
 from . import model
 
 N4DLAPI_MAJOR_VERSION = 1
-N4DLAPI_MINOR_VERSION = 0
+N4DLAPI_MINOR_VERSION = 1
 
 config.init()
 
@@ -54,7 +54,7 @@ def public_info_api() -> model.PublicInfoModel:
 
 
 @app.post("/api/v1/update", dependencies=[fastapi.Depends(verify_api_access)])
-def update_api(request: fastapi.Request, param: model.UpdateRequestModel) -> list[model.DownloadInfoModel]:
+def update_api(request: fastapi.Request, param: model.UpdateRequestModel) -> list[model.DownloadUpdateModel]:
     """
     Get download links for update package to the latest version available.
     """

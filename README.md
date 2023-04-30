@@ -1,7 +1,7 @@
 NPPS4-DLAPI
 =====
 
-[![NPPS4 DLAPI Spec.: Version 1.0](https://img.shields.io/badge/NPPS4%20DLAPI%20Spec.-Version%201.0-bf88ba)](https://github.com/DarkEnergyProcessor/NPPS4-DLAPI)
+[![NPPS4 DLAPI Spec.: Version 1.1](https://img.shields.io/badge/NPPS4%20DLAPI%20Spec.-Version%201.1-bf88ba)](https://github.com/DarkEnergyProcessor/NPPS4-DLAPI)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 This is reference implementation and documentation of NPPS4 Download API protocol.
@@ -225,7 +225,33 @@ Get download links for update package to the latest version available.
 > | version   | required | string         | Old client version                       |
 > | platform  | required | int            | Platform type. 1 for iOS, 2 for Android. |
 
-#### Responses
+#### Responses (v1.1)
+
+```jsonc
+// HTTP Code 200
+[
+	// ... more items
+	// For each item in this array
+	{
+		// Direct link to download.
+		// Link must be publicly accessible even without Shared Key header.
+		"url": "http://localhost/download/update_59.4.zip",
+		// Archive size in bytes.
+		"size": 12345,
+		"checksums": {
+			// For checksums, MD5 and SHA256 is required.
+			// Other checksums for application-specific usage is allowed.
+			"md5": "d41d8cd98f00b204e9800998ecf8427e",
+			"sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+		},
+		// Update version
+		"version": "59.4"
+	}
+	// ... more items
+]
+```
+
+#### Responses (v1.0)
 
 ```jsonc
 // HTTP Code 200
@@ -458,3 +484,8 @@ License
 -----
 
 This reference implementation is licensed under zlib/libpng license.
+
+Note that certain helper files are licensed under MIT instead. This includes:
+
+* `update_v1.1.py`
+* `clone.py`
