@@ -75,11 +75,24 @@ def get_versions(file: str):
     return new_ver
 
 
+_update_preference: int = -1
+
+
 def get_latest_version():
-    update_android: list[str] = natsort.natsorted(
-        read_json(config.get_archive_root_dir() + "/Android/package/info.json")
+    global _update_preference
+    root_dir = config.get_archive_root_dir()
+
+    if _update_preference == -1:
+        for i, v in enumerate(_PLATFORM_MAP):
+            if os.path.isfile(os.path.join(root_dir, v, "package/info.json")):
+                _update_preference = i
+                break
+        raise RuntimeError("No package found!")
+
+    update_info: list[str] = natsort.natsorted(
+        read_json(f"{root_dir}/{_PLATFORM_MAP[_update_preference]}/package/info.json")
     )
-    return parse_sifversion(update_android[-1])
+    return parse_sifversion(update_info[-1])
 
 
 def get_release_info():
@@ -164,9 +177,10 @@ def get_single_package(pkgtype: int, pkgid: int, platform: int):
 
 
 def get_database_file(name: str):
+    global _update_preference
     latest = get_latest_version()
     dbname = "".join(filter(lambda x: x.isalnum() or x == "_", name))
-    path = f"{config.get_archive_root_dir()}/Android/package/{version_string(latest)}/db/{dbname}.db_"
+    path = f"{config.get_archive_root_dir()}/{_PLATFORM_MAP[_update_preference]}/package/{version_string(latest)}/db/{dbname}.db_"
     try:
         with open(path, "rb") as f:
             return f.read()
