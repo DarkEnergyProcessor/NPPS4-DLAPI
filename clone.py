@@ -1,3 +1,5 @@
+# Script to download your own local copy of SIF game data for private server.
+#
 # Copyright (c) 2023 Dark Energy Processor
 #
 # Permission is hereby granted, free of charge, to any person obtaining a

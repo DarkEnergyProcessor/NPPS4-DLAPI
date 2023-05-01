@@ -1,3 +1,6 @@
+# Script to upgrade the file "generation" from 1.0 (no generation.json)
+# to 1.1 for easier and faster access.
+#
 # Copyright (c) 2023 Dark Energy Processor
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
