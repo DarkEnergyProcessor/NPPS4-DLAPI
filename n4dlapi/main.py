@@ -16,6 +16,8 @@
 #    misrepresented as being the original software.
 # 3. This notice may not be removed or altered from any source distribution.
 
+import subprocess
+
 import fastapi
 import fastapi.staticfiles
 
@@ -23,12 +25,19 @@ from . import config
 from . import file
 from . import model
 
-N4DLAPI_MAJOR_VERSION = 1
-N4DLAPI_MINOR_VERSION = 1
+DLAPI_MAJOR_VERSION = 1
+DLAPI_MINOR_VERSION = 1
+
+NPPS4_DLAPI_PROGRAM_VERSION = (2023, 5, 14)
+
+try:
+    NPPS4_DLAPI_GIT_COMMIT = subprocess.check_output(["git", "rev-parse", "HEAD"]).decode("UTF-8").strip()
+except:
+    NPPS4_DLAPI_GIT_COMMIT = "unknown"
 
 config.init()
 
-app = fastapi.FastAPI()
+app = fastapi.FastAPI(title="NPPS4-DLAPI", version="%d.%02d.%02d" % NPPS4_DLAPI_PROGRAM_VERSION)
 app.mount("/archive-root", fastapi.staticfiles.StaticFiles(directory=config.get_archive_root_dir()), "archive-root")
 
 
@@ -38,22 +47,25 @@ def verify_api_access(request: fastapi.Request):
     return True
 
 
-@app.get("/api/publicinfo", dependencies=[fastapi.Depends(verify_api_access)])
+@app.get("/api/publicinfo", dependencies=[fastapi.Depends(verify_api_access)], tags=["info"])
 def public_info_api() -> model.PublicInfoModel:
     """
     Retrieve information about the DLAPI server.
     """
     return model.PublicInfoModel(
         publicApi=config.is_public_accessible(),
-        dlapiVersion=model.VersionModel(major=N4DLAPI_MAJOR_VERSION, minor=N4DLAPI_MINOR_VERSION),
+        dlapiVersion=model.VersionModel(major=DLAPI_MAJOR_VERSION, minor=DLAPI_MINOR_VERSION),
         # This reference implementation doesn't impose any time limit restriction.
         serveTimeLimit=0,
         gameVersion="%s.%s" % file.get_latest_version(),
-        application={},
+        application={
+            "NPPS4DLAPICommit": NPPS4_DLAPI_GIT_COMMIT,
+            "NPPS4DLAPIVersion": "%d.%02d.%02d" % NPPS4_DLAPI_PROGRAM_VERSION,
+        },
     )
 
 
-@app.post("/api/v1/update", dependencies=[fastapi.Depends(verify_api_access)])
+@app.post("/api/v1/update", dependencies=[fastapi.Depends(verify_api_access)], tags=["v1"])
 def update_api(request: fastapi.Request, param: model.UpdateRequestModel) -> list[model.DownloadUpdateModel]:
     """
     Get download links for update package to the latest version available.
@@ -69,6 +81,7 @@ def update_api(request: fastapi.Request, param: model.UpdateRequestModel) -> lis
     dependencies=[fastapi.Depends(verify_api_access)],
     response_model=list[model.BatchDownloadInfoModel],
     responses={404: {"model": model.ErrorResponseModel}},
+    tags=["v1"],
 )
 def batch_api(request: fastapi.Request, param: model.BatchDownloadRequestModel):
     """
@@ -88,6 +101,7 @@ def batch_api(request: fastapi.Request, param: model.BatchDownloadRequestModel):
     dependencies=[fastapi.Depends(verify_api_access)],
     response_model=list[model.DownloadInfoModel],
     responses={404: {"model": model.ErrorResponseModel}},
+    tags=["v1"],
 )
 def download_api(request: fastapi.Request, param: model.DownlodaRequestModel):
     """
@@ -107,6 +121,7 @@ def download_api(request: fastapi.Request, param: model.DownlodaRequestModel):
     dependencies=[fastapi.Depends(verify_api_access)],
     response_class=fastapi.responses.Response,
     responses={200: {"content": {"application/vnd.sqlite3": {}}}, 404: {"model": model.ErrorResponseModel}},
+    tags=["v1"],
 )
 def getdb_api(name: str):
     """
@@ -122,7 +137,10 @@ def getdb_api(name: str):
 
 
 @app.post(
-    "/api/v1/getfile", dependencies=[fastapi.Depends(verify_api_access)], response_model=list[model.DownloadInfoModel]
+    "/api/v1/getfile",
+    dependencies=[fastapi.Depends(verify_api_access)],
+    response_model=list[model.DownloadInfoModel],
+    tags=["v1"],
 )
 def getfile_api(request: fastapi.Request, param: model.MicroDownloadRequestModel):
     """
@@ -134,7 +152,7 @@ def getfile_api(request: fastapi.Request, param: model.MicroDownloadRequestModel
     return downloads
 
 
-@app.get("/api/v1/release_info", dependencies=[fastapi.Depends(verify_api_access)])
+@app.get("/api/v1/release_info", dependencies=[fastapi.Depends(verify_api_access)], tags=["v1"])
 def release_info_api() -> dict[str, str]:
     """
     Get available `release_info` keys.
