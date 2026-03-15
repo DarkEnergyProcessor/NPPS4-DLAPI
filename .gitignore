@@ -2,6 +2,7 @@
 archive-root
 static
 venv
+.venv
 *.pyc
 config.toml
 node_modules
