@@ -1,0 +1,21 @@
+{
+  "name": "npps4-dlapi",
+  "main": "src/index.ts",
+  "compatibility_date": "2024-12-30",
+  "r2_buckets": [
+    {
+      // R2 bucket storing the archive-root contents.
+      // Create with: wrangler r2 bucket create npps4-dlapi-archive
+      "binding": "ARCHIVE_BUCKET",
+      "bucket_name": "npps4-dlapi-archive"
+    }
+  ],
+  // Environment variables (defaults).
+  // Override per-environment or via `wrangler secret put`.
+  "vars": {
+    "PUBLIC": "true"
+  }
+  // To set a shared key, use: wrangler secret put SHARED_KEY
+  // Per-endpoint access control is configured via API_ACCESS secret (JSON string).
+  // Example: {"publicinfo":{"public":true},"v1":{"getdb":{"public":false}}}
+}

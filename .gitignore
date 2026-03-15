@@ -4,3 +4,6 @@ static
 venv
 *.pyc
 config.toml
+node_modules
+.wrangler
+dist
