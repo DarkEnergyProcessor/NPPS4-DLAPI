@@ -43,6 +43,9 @@
 // Pre-computed hashes for deterministic test data
 // Content "update-59.2-ios" -> md5/sha256
 const FIXTURES: Record<string, string | object> = {
+  // ── Generation marker ──
+  "generation.json": { major: 1, minor: 1 },
+
   // ── Release info ──
   "release_info.json": {
     "2": "w64fJz1yDElhK8ElVYxVvg==",

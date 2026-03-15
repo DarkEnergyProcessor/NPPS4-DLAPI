@@ -7,7 +7,8 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "cf-typegen": "wrangler types",
-    "test": "vitest run"
+    "test": "vitest run",
+    "generate-snapshots": "python test/generate_snapshots.py"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.13.0",

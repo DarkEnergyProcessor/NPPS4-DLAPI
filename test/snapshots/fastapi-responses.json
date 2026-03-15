@@ -1,0 +1,281 @@
+{
+  "publicinfo": {
+    "status": 200,
+    "body": {
+      "publicApi": true,
+      "dlapiVersion": {
+        "major": 1,
+        "minor": 1
+      },
+      "serveTimeLimit": 0,
+      "gameVersion": "59.4",
+      "application": {
+        "NPPS4DLAPIVersion": "2023.05.14"
+      }
+    }
+  },
+  "update-ios-from-59.0": {
+    "status": 200,
+    "body": [
+      {
+        "url": "iOS/update/59.2/1.zip",
+        "size": 15,
+        "checksums": {
+          "md5": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1",
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb01"
+        },
+        "version": "59.2"
+      },
+      {
+        "url": "iOS/update/59.4/1.zip",
+        "size": 15,
+        "checksums": {
+          "md5": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa2",
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb02"
+        },
+        "version": "59.4"
+      }
+    ]
+  },
+  "update-ios-from-59.2": {
+    "status": 200,
+    "body": [
+      {
+        "url": "iOS/update/59.4/1.zip",
+        "size": 15,
+        "checksums": {
+          "md5": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa2",
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb02"
+        },
+        "version": "59.4"
+      }
+    ]
+  },
+  "update-ios-at-latest": {
+    "status": 200,
+    "body": []
+  },
+  "update-android-from-59.0": {
+    "status": 200,
+    "body": [
+      {
+        "url": "Android/update/59.4/1.zip",
+        "size": 250,
+        "checksums": {
+          "md5": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa3",
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb03"
+        },
+        "version": "59.4"
+      }
+    ]
+  },
+  "batch-ios-type0": {
+    "status": 200,
+    "body": [
+      {
+        "url": "iOS/package/59.4/0/1/1.zip",
+        "size": 300,
+        "checksums": {
+          "md5": "cccccccccccccccccccccccccccccccc",
+          "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd01"
+        },
+        "packageId": 1
+      },
+      {
+        "url": "iOS/package/59.4/0/2/1.zip",
+        "size": 400,
+        "checksums": {
+          "md5": "cccccccccccccccccccccccccccccc02",
+          "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd02"
+        },
+        "packageId": 2
+      },
+      {
+        "url": "iOS/package/59.4/0/2/2.zip",
+        "size": 350,
+        "checksums": {
+          "md5": "cccccccccccccccccccccccccccccc03",
+          "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd03"
+        },
+        "packageId": 2
+      }
+    ]
+  },
+  "batch-ios-type0-exclude2": {
+    "status": 200,
+    "body": [
+      {
+        "url": "iOS/package/59.4/0/1/1.zip",
+        "size": 300,
+        "checksums": {
+          "md5": "cccccccccccccccccccccccccccccccc",
+          "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd01"
+        },
+        "packageId": 1
+      }
+    ]
+  },
+  "batch-ios-type3-notfound": {
+    "status": 404,
+    "body": {
+      "detail": "Package type not found"
+    }
+  },
+  "batch-ios-no-exclude-field": {
+    "status": 200,
+    "body": [
+      {
+        "url": "iOS/package/59.4/0/1/1.zip",
+        "size": 300,
+        "checksums": {
+          "md5": "cccccccccccccccccccccccccccccccc",
+          "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd01"
+        },
+        "packageId": 1
+      },
+      {
+        "url": "iOS/package/59.4/0/2/1.zip",
+        "size": 400,
+        "checksums": {
+          "md5": "cccccccccccccccccccccccccccccc02",
+          "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd02"
+        },
+        "packageId": 2
+      },
+      {
+        "url": "iOS/package/59.4/0/2/2.zip",
+        "size": 350,
+        "checksums": {
+          "md5": "cccccccccccccccccccccccccccccc03",
+          "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd03"
+        },
+        "packageId": 2
+      }
+    ]
+  },
+  "download-ios-0-2": {
+    "status": 200,
+    "body": [
+      {
+        "url": "iOS/package/59.4/0/2/1.zip",
+        "size": 400,
+        "checksums": {
+          "md5": "cccccccccccccccccccccccccccccc02",
+          "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd02"
+        }
+      },
+      {
+        "url": "iOS/package/59.4/0/2/2.zip",
+        "size": 350,
+        "checksums": {
+          "md5": "cccccccccccccccccccccccccccccc03",
+          "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd03"
+        }
+      }
+    ]
+  },
+  "download-ios-0-999-notfound": {
+    "status": 404,
+    "body": {
+      "detail": "Package not found"
+    }
+  },
+  "download-android-0-1": {
+    "status": 200,
+    "body": [
+      {
+        "url": "Android/package/59.4/0/1/1.zip",
+        "size": 320,
+        "checksums": {
+          "md5": "cccccccccccccccccccccccccccccc04",
+          "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd04"
+        }
+      }
+    ]
+  },
+  "getdb-testdb": {
+    "status": 200,
+    "body_base64": "RkFLRS1TUUxJVEUzLURBVEE=",
+    "content_type": "application/vnd.sqlite3",
+    "content_disposition": "attachment; filename=\"testdb.db_\""
+  },
+  "getdb-notfound": {
+    "status": 404,
+    "body": {
+      "detail": "Database not found"
+    }
+  },
+  "getdb-sanitize": {
+    "status": 200,
+    "body_base64": "RkFLRS1TUUxJVEUzLURBVEE=",
+    "content_type": "application/vnd.sqlite3",
+    "content_disposition": "attachment; filename=\"test..db.db_\""
+  },
+  "getfile-single": {
+    "status": 200,
+    "body": [
+      {
+        "url": "iOS/package/59.4/microdl/some/file.txt",
+        "size": 50,
+        "checksums": {
+          "md5": "11111111111111111111111111111111",
+          "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      }
+    ]
+  },
+  "getfile-multi": {
+    "status": 200,
+    "body": [
+      {
+        "url": "iOS/package/59.4/microdl/some/file.txt",
+        "size": 50,
+        "checksums": {
+          "md5": "11111111111111111111111111111111",
+          "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      },
+      {
+        "url": "iOS/package/59.4/microdl/another/asset.png",
+        "size": 1024,
+        "checksums": {
+          "md5": "33333333333333333333333333333333",
+          "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+        }
+      }
+    ]
+  },
+  "getfile-unknown": {
+    "status": 200,
+    "body": [
+      {
+        "url": "iOS/package/59.4/microdl/nonexistent/file.bin",
+        "size": 0,
+        "checksums": {
+          "md5": "d41d8cd98f00b204e9800998ecf8427e",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ]
+  },
+  "getfile-traversal": {
+    "status": 200,
+    "body": [
+      {
+        "url": "iOS/package/59.4/microdl/some/file.txt",
+        "size": 50,
+        "checksums": {
+          "md5": "11111111111111111111111111111111",
+          "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      }
+    ]
+  },
+  "release-info": {
+    "status": 200,
+    "body": {
+      "2": "w64fJz1yDElhK8ElVYxVvg==",
+      "423": "UDKkj/dmBRbz+CIB+Ekqyg=="
+    }
+  }
+}
