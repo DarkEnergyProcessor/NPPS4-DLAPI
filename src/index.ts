@@ -34,6 +34,8 @@ import {
   getDatabaseFile,
   getMicroDlFile,
 } from "./file";
+import { runSync, getSyncStatus } from "./sync";
+import { renderDashboard, renderDashboardJson } from "./dashboard";
 
 const DLAPI_MAJOR_VERSION = 1;
 const DLAPI_MINOR_VERSION = 1;
@@ -231,6 +233,22 @@ export default {
       return handleReleaseInfo(request, env);
     }
 
+    // Dashboard routes
+    if (path === "/dashboard" && request.method === "GET") {
+      const cursor = await getSyncStatus(env.SYNC_KV);
+      return new Response(renderDashboard(cursor), {
+        headers: { "Content-Type": "text/html; charset=utf-8" },
+      });
+    }
+    if (path === "/dashboard/json" && request.method === "GET") {
+      const cursor = await getSyncStatus(env.SYNC_KV);
+      return jsonResponse(renderDashboardJson(cursor));
+    }
+
     return notFound();
+  },
+
+  async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
+    ctx.waitUntil(runSync(env));
   },
 } satisfies ExportedHandler<Env>;

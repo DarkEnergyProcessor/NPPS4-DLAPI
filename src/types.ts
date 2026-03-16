@@ -18,9 +18,12 @@
 
 export interface Env {
   ARCHIVE_BUCKET: R2Bucket;
+  SYNC_KV: KVNamespace;
   PUBLIC: string;
   SHARED_KEY?: string;
   API_ACCESS?: string;
+  UPSTREAM_URL?: string;
+  UPSTREAM_SHARED_KEY?: string;
 }
 
 export enum PlatformType {
@@ -115,4 +118,41 @@ export interface MicroDlInfo {
     md5: string;
     sha256: string;
   };
+}
+
+// ── Sync types ──
+
+export type SyncPhase = "fetch_links" | "update" | "packages" | "metadata" | "done";
+
+export interface SyncFileLink {
+  url: string;
+  r2Key: string;
+  size: number;
+  md5: string;
+  sha256: string;
+}
+
+export interface SyncCursor {
+  phase: SyncPhase;
+  upstreamVersion: string;
+  /** All file links to download, collected during fetch_links phase */
+  files: SyncFileLink[];
+  /** Index into files array — how far we've gotten */
+  fileIndex: number;
+  /** Bytes uploaded so far */
+  bytesUploaded: number;
+  /** Files uploaded so far */
+  filesUploaded: number;
+  /** Total bytes to upload */
+  totalBytes: number;
+  /** Total files to upload */
+  totalFiles: number;
+  /** Timestamp when sync started */
+  startedAt: number;
+  /** Timestamp of last activity */
+  lastActivityAt: number;
+  /** Error message if last run failed */
+  lastError?: string;
+  /** Metadata JSON files to write (collected during fetch_links) */
+  metadataWrites: Array<{ key: string; data: unknown }>;
 }

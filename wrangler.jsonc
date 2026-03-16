@@ -10,12 +10,29 @@
       "bucket_name": "npps4-dlapi-archive"
     }
   ],
+  "kv_namespaces": [
+    {
+      // KV namespace for sync cursor and state.
+      // Create with: wrangler kv namespace create SYNC_KV
+      "binding": "SYNC_KV",
+      "id": "REPLACE_WITH_KV_NAMESPACE_ID"
+    }
+  ],
   // Environment variables (defaults).
   // Override per-environment or via `wrangler secret put`.
   "vars": {
     "PUBLIC": "true"
+  },
+  // Cron trigger for periodic sync.
+  // Every 5 minutes during initial sync; reduce to hourly after.
+  "triggers": {
+    "crons": ["*/5 * * * *"]
   }
   // To set a shared key, use: wrangler secret put SHARED_KEY
   // Per-endpoint access control is configured via API_ACCESS secret (JSON string).
   // Example: {"publicinfo":{"public":true},"v1":{"getdb":{"public":false}}}
+  //
+  // Sync configuration (set via wrangler secret put):
+  //   UPSTREAM_URL        - Base URL of upstream NPPS4-DLAPI (e.g. https://ll.sif.moe/npps4_dlapi)
+  //   UPSTREAM_SHARED_KEY - Shared key for upstream auth (optional if upstream is public)
 }
