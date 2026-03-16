@@ -3,15 +3,17 @@
 Probe an upstream NPPS4-DLAPI server to estimate total data size
 without downloading any actual files. Only calls metadata API endpoints.
 
+Uses the same http.client approach as clone.py for compatibility.
+
 Usage:
     python probe_upstream.py https://ll.sif.moe/npps4_dlapi
     python probe_upstream.py https://ll.sif.moe/npps4_dlapi --shared-key KEY
 """
 
 import argparse
+import http.client
 import json
-import sys
-import urllib.request
+import urllib.parse
 
 PACKAGE_TYPE_NAMES = {
     0: "bootstrap",
@@ -25,19 +27,55 @@ PACKAGE_TYPE_NAMES = {
 
 OS_MAP = {1: "iOS", 2: "Android"}
 
+_http_client: http.client.HTTPSConnection | http.client.HTTPConnection | None = None
+
+
+def get_client(parse: urllib.parse.ParseResult):
+    """Create or reuse an HTTP(S) connection, matching clone.py's approach."""
+    global _http_client
+    port = parse.port or (443 if parse.scheme == "https" else 80)
+
+    if (
+        _http_client is not None
+        and _http_client.host == parse.hostname
+        and _http_client.port == port
+    ):
+        return _http_client
+
+    if _http_client is not None:
+        _http_client.close()
+
+    cls = http.client.HTTPSConnection if parse.scheme == "https" else http.client.HTTPConnection
+    _http_client = cls(parse.hostname, port, timeout=30)
+    return _http_client
+
 
 def api_call(base_url: str, endpoint: str, shared_key: str, body=None):
-    url = base_url.rstrip("/") + "/" + endpoint.lstrip("/")
-    if body is not None:
-        data = json.dumps(body).encode("utf-8")
-        req = urllib.request.Request(url, data=data, method="POST")
-        req.add_header("Content-Type", "application/json")
-    else:
-        req = urllib.request.Request(url, method="GET")
+    """Call an API endpoint using the same method as clone.py."""
+    parse_base = urllib.parse.urlparse(base_url)
+    # Ensure trailing slash on base path (matches clone.py line 597)
+    base_path = parse_base.path
+    if not base_path.endswith("/"):
+        base_path += "/"
+    path = base_path + (endpoint[1:] if endpoint.startswith("/") else endpoint)
+
+    client = get_client(parse_base)
+    headers = {}
     if shared_key:
-        req.add_header("DLAPI-Shared-Key", shared_key)
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        return json.loads(resp.read())
+        headers["DLAPI-Shared-Key"] = urllib.parse.quote(shared_key)
+
+    if body is not None:
+        headers["Content-Type"] = "application/json"
+        client.request("POST", path, json.dumps(body).encode("UTF-8"), headers)
+    else:
+        # clone.py sends json.dumps(None) = b"null" as body even for GET
+        client.request("GET", path, json.dumps(None).encode("UTF-8"), headers)
+
+    response = client.getresponse()
+    data = response.read()
+    if response.status != 200:
+        raise RuntimeError(f"HTTP {response.status} for {path}")
+    return json.loads(data)
 
 
 def fmt_size(nbytes: int) -> str:
@@ -108,7 +146,6 @@ def main():
                 if isinstance(batch, list):
                     size = sum(b["size"] for b in batch)
                     count = len(batch)
-                    # Count unique package IDs
                     pkg_ids = set(b.get("packageId") for b in batch)
                     total_size += size
                     total_files += count
@@ -125,9 +162,9 @@ def main():
     print("=" * 60)
     print()
 
-    for label, info in sorted(breakdown.items()):
-        pkg_note = f" ({info['package_ids']} packages)" if "package_ids" in info else ""
-        print(f"  {label}: {info['files']} files, {fmt_size(info['size'])}{pkg_note}")
+    for label, data in sorted(breakdown.items()):
+        pkg_note = f" ({data['package_ids']} packages)" if "package_ids" in data else ""
+        print(f"  {label}: {data['files']} files, {fmt_size(data['size'])}{pkg_note}")
 
     print()
     print(f"  Total files: {total_files}")
