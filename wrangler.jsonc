@@ -2,9 +2,18 @@
   "name": "npps4-dlapi",
   "main": "src/index.ts",
   "compatibility_date": "2024-12-30",
-  // Bindings (configure via Cloudflare dashboard):
-  //   - R2 bucket "ARCHIVE_BUCKET" (create with: wrangler r2 bucket create npps4-dlapi-archive)
-  //   - KV namespace "SYNC_KV" (create with: wrangler kv namespace create SYNC_KV)
+  "r2_buckets": [
+    {
+      "binding": "ARCHIVE_BUCKET",
+      "bucket_name": "npps4-dlapi-archive"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "SYNC_KV",
+      "id": "b1785ea77ede42c68dc02be918cdd985"
+    }
+  ],
   // Environment variables (defaults).
   // Override per-environment or via `wrangler secret put`.
   "vars": {
