@@ -10,7 +10,7 @@ import type {
 import { PLATFORM_MAP } from "./types";
 
 const SYNC_CURSOR_KEY = "sync:cursor";
-const FILES_PER_RUN = 50;
+const FILES_PER_RUN = 10;
 const PACKAGE_TYPES = [0, 1, 2, 3, 4, 5, 6] as const;
 
 function emptyCursor(): SyncCursor {
@@ -305,8 +305,7 @@ export async function runSync(env: Env): Promise<void> {
   switch (cursor.phase) {
     case "fetch_links":
       await fetchAllLinks(env, cursor);
-      // Fall through to start downloading immediately
-      await syncFiles(env, cursor);
+      // Save and let the next invocation start downloading
       break;
     case "update":
     case "packages":
