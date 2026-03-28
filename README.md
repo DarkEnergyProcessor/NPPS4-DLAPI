@@ -1,7 +1,7 @@
 NPPS4-DLAPI
 =====
 
-[![NPPS4 DLAPI Spec.: Version 1.1](https://img.shields.io/badge/NPPS4%20DLAPI%20Spec.-Version%201.1-bf88ba)](https://github.com/DarkEnergyProcessor/NPPS4-DLAPI)
+[![NPPS4 DLAPI Spec.: Version 1.2](https://img.shields.io/badge/NPPS4%20DLAPI%20Spec.-Version%201.2-bf88ba)](https://github.com/DarkEnergyProcessor/NPPS4-DLAPI)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 This is reference implementation and documentation of NPPS4 Download API protocol.
@@ -17,7 +17,9 @@ archive-root/
 │   ├── update/
 │   │   ├── <client_version>/
 │   │   │   ├── 1.zip
+│   │   │   ├── 1_sha256.zip (**)
 │   │   │   ├── 2.zip
+│   │   │   ├── 2_sha256.zip (**)
 │   │   │   ├── ...
 │   │   │   ├── info.json
 │   │   │   └── infov2.json (*)
@@ -28,7 +30,9 @@ archive-root/
 │       │   ├── <package_type>/
 │       │   │   ├── <package_id>/
 │       │   │   │   ├── 1.zip
+│       │   │   │   ├── 1_sha256.zip (**)
 │       │   │   │   ├── 2.zip
+│       │   │   │   ├── 2_sha256.zip (**)
 │       │   │   │   ├── ...
 │       │   │   │   ├── info.json
 │       │   │   │   └── infov2.json (*)
@@ -47,6 +51,9 @@ archive-root/
 ```
 
 **\***: run `update_v1.1.py` script to upgrade the directory structure!
+
+**\*\***: run `update_v1.2.py` script to upgrade the directory structure! Non-SHA256 suffixed filename will be removed
+afterwards
 
 ### Explanation, all paths are relative to `archive-root`:
 
@@ -488,4 +495,21 @@ This reference implementation is licensed under zlib/libpng license.
 Note that certain helper files are licensed under MIT instead. This includes:
 
 * `update_v1.1.py`
+* `update_v1.2.py`
 * `clone.py`
+
+Protocol Change History:
+-----
+
+### v1.2
+
+Rename all zip files to have SHA256 on its filename due to buggy game behavior with its download mechanism.
+No API changes.
+
+### v1.1
+
+Expand microdl file mapping and improved information JSON file.
+
+### v1.0
+
+Initial protocol release.
